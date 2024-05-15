@@ -12,5 +12,31 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+
+		<Button Grid.Row="0"
+				VerticalAlignment="Top"
+				Command="{Binding ImportImageCmd}">Import image</Button>
+		<StackPanel Grid.Row="1">
+			<UniformGrid>
+				<StackPanel IsVisible="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
+					<TextBox>Bonjour</TextBox>
+				</StackPanel>
+				<Image Source="{Binding Source}"></Image>
+			</UniformGrid>
+		</StackPanel>
+		<StackPanel Grid.Row="1"
+					Orientation="Horizontal"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Bottom">
+			<Button>Cancel</Button>
+			<Button>Save &#38; Next</Button>
+			<Button>Export</Button>
+		</StackPanel>
+	</Grid>
 </UserControl>
