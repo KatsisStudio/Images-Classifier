@@ -65,7 +65,7 @@ public class MainViewModel : ViewModelBase
                     ClothesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Clothes).Distinct());
                     SexesAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Sexes).Distinct());
                     OthersChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Others).Distinct());
-                    TextLangChoices.AddRange(Metadatas.Where(x => x != null).Select(x => x.Text.Language));
+                    TextLangChoices.AddRange(Metadatas.Where(x => x.Text != null).Select(x => x.Text.Language));
                 }
                 catch (Exception ex)
                 {
@@ -110,6 +110,8 @@ public class MainViewModel : ViewModelBase
         {
             if (Source != null)
             {
+                _newMetadatas.Add(_currentMetadata);
+
                 var bmp = (Bitmap)Source;
                 bmp.Save($"export/images/{_currentMetadata.Id}.{_currentMetadata.Format}");
 
@@ -118,6 +120,8 @@ public class MainViewModel : ViewModelBase
                 var ratio = w > h ? (w / 200f) : (h / 300f);
 
                 bmp.CreateScaledBitmap(new PixelSize((int)(w / ratio), (int)(h / ratio))).Save($"export/thumbnails/{_currentMetadata.Id}.{_currentMetadata.Format}");
+
+                File.WriteAllText("export/info.json", JsonSerializer.Serialize(_newMetadatas));
 
                 ResetAll();
             }
@@ -271,6 +275,8 @@ public class MainViewModel : ViewModelBase
         get => _metadatas;
         set => this.RaiseAndSetIfChanged(ref _metadatas, value);
     }
+
+    public List<ImageData> _newMetadatas = new();
 
     private IImage _source;
     public IImage Source

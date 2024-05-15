@@ -39,7 +39,7 @@
 							  ItemsSource="{Binding RatingChoices}"></ComboBox>
 					<TextBlock>Questionnable mean image highly suggestive but showing nothing explicit</TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
 						<ComboBox SelectedIndex="{Binding SexesIndex}"
 								  ItemsSource="{Binding SexesChoices}"></ComboBox>
 						<Button Command="{Binding SexesAdd}">Add</Button>
