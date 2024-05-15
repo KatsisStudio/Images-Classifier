@@ -28,6 +28,9 @@ namespace Images_Classifier.Models
 
         [JsonPropertyName("comment")]
         public string Comment { set; get; }
+
+        [JsonPropertyName("title")]
+        public string Title { set; get; }
     }
 
     public class Tag

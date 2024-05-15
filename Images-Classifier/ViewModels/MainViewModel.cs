@@ -61,6 +61,11 @@ public class MainViewModel : ViewModelBase
                     NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Names).Distinct());
                     RacialAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.RacialAttributes).Distinct());
                     AttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Attributes).Distinct());
+                    PosesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Poses).Distinct());
+                    ClothesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Clothes).Distinct());
+                    SexesAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Sexes).Distinct());
+                    OthersChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Others).Distinct());
+                    TextLangChoices.AddRange(Metadatas.Where(x => x != null).Select(x => x.Text.Language));
                 }
                 catch (Exception ex)
                 {
@@ -167,6 +172,46 @@ public class MainViewModel : ViewModelBase
             AttributesContent = string.Join(", ", _attributesContentList);
             AttributesText = string.Empty;
         });
+
+        PosesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = PosesText.ToLowerInvariant();
+            _posesContentList.Add(key);
+            PosesContent = string.Join(", ", _posesContentList);
+            PosesText = string.Empty;
+        });
+
+        ClothesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = ClothesText.ToLowerInvariant();
+            _clothesContentList.Add(key);
+            ClothesContent = string.Join(", ", _clothesContentList);
+            ClothesText = string.Empty;
+        });
+
+        SexesAttributesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = SexesAttributesText.ToLowerInvariant();
+            _sexesAttributesContentList.Add(key);
+            SexesAttributesContent = string.Join(", ", _sexesAttributesContentList);
+            SexesAttributesText = string.Empty;
+        });
+
+        OthersAdd = ReactiveCommand.Create(() =>
+        {
+            var key = OthersText.ToLowerInvariant();
+            _othersContentList.Add(key);
+            OthersContent = string.Join(", ", _othersContentList);
+            OthersText = string.Empty;
+        });
+
+        TextContentAdd = ReactiveCommand.Create(() =>
+        {
+            var key = TextContentText.ToLowerInvariant();
+            _textContentContentList.Add(key);
+            TextContentContent = string.Join(", ", _textContentContentList);
+            TextContentText = string.Empty;
+        });
     }
 
     private void ResetAll()
@@ -197,6 +242,24 @@ public class MainViewModel : ViewModelBase
         AttributesContent = string.Empty;
         AttributesText = string.Empty;
         _attributesContentList.Clear();
+        PosesContent = string.Empty;
+        PosesText = string.Empty;
+        _posesContentList.Clear();
+        ClothesContent = string.Empty;
+        ClothesText = string.Empty;
+        _clothesContentList.Clear();
+        SexesAttributesContent = string.Empty;
+        SexesAttributesText = string.Empty;
+        _sexesAttributesContentList.Clear();
+        OthersContent = string.Empty;
+        OthersText = string.Empty;
+        _othersContentList.Clear();
+        TextLangText = string.Empty;
+        TextContentContent = string.Empty;
+        TextContentText = string.Empty;
+        _textContentContentList.Clear();
+        TitleText = string.Empty;
+        CommentText = string.Empty;
     }
 
 
@@ -344,4 +407,105 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _attributesContent, value);
     }
     public ICommand AttributesAdd { get; }
+
+    private string _posesText;
+    public string PosesText
+    {
+        get => _posesText;
+        set => this.RaiseAndSetIfChanged(ref _posesText, value);
+    }
+    public ObservableCollection<string> PosesChoices { private set; get; } = [];
+    private List<string> _posesContentList = [];
+    private string _posesContent = string.Empty;
+    public string PosesContent
+    {
+        get => _posesContent;
+        set => this.RaiseAndSetIfChanged(ref _posesContent, value);
+    }
+    public ICommand PosesAdd { get; }
+
+    private string _clothesText;
+    public string ClothesText
+    {
+        get => _clothesText;
+        set => this.RaiseAndSetIfChanged(ref _clothesText, value);
+    }
+    public ObservableCollection<string> ClothesChoices { private set; get; } = [];
+    private List<string> _clothesContentList = [];
+    private string _clothesContent = string.Empty;
+    public string ClothesContent
+    {
+        get => _clothesContent;
+        set => this.RaiseAndSetIfChanged(ref _clothesContent, value);
+    }
+    public ICommand ClothesAdd { get; }
+
+    private string _sexesAttributesText;
+    public string SexesAttributesText
+    {
+        get => _sexesAttributesText;
+        set => this.RaiseAndSetIfChanged(ref _sexesAttributesText, value);
+    }
+    public ObservableCollection<string> SexesAttributesChoices { private set; get; } = [];
+    private List<string> _sexesAttributesContentList = [];
+    private string _sexesAttributesContent = string.Empty;
+    public string SexesAttributesContent
+    {
+        get => _sexesAttributesContent;
+        set => this.RaiseAndSetIfChanged(ref _sexesAttributesContent, value);
+    }
+    public ICommand SexesAttributesAdd { get; }
+
+    private string _othersText;
+    public string OthersText
+    {
+        get => _othersText;
+        set => this.RaiseAndSetIfChanged(ref _othersText, value);
+    }
+    public ObservableCollection<string> OthersChoices { private set; get; } = [];
+    private List<string> _othersContentList = [];
+    private string _othersContent = string.Empty;
+    public string OthersContent
+    {
+        get => _othersContent;
+        set => this.RaiseAndSetIfChanged(ref _othersContent, value);
+    }
+    public ICommand OthersAdd { get; }
+
+    private string _textLangText;
+    public string TextLangText
+    {
+        get => _textLangText;
+        set => this.RaiseAndSetIfChanged(ref _textLangText, value);
+    }
+    public ObservableCollection<string> TextLangChoices { private set; get; } = [];
+
+    private string _textContentText;
+    public string TextContentText
+    {
+        get => _textContentText;
+        set => this.RaiseAndSetIfChanged(ref _textContentText, value);
+    }
+    private List<string> _textContentContentList = [];
+    private string _textContentContent = string.Empty;
+    public string TextContentContent
+    {
+        get => _textContentContent;
+        set => this.RaiseAndSetIfChanged(ref _textContentContent, value);
+    }
+    public ICommand TextContentAdd { get; }
+
+    private string _titleText = string.Empty;
+    public string TitleText
+    {
+        get => _titleText;
+        set => this.RaiseAndSetIfChanged(ref _titleText, value);
+    }
+
+    private string _commentText = string.Empty;
+    public string CommentText
+    {
+        get => _commentText;
+        set => this.RaiseAndSetIfChanged(ref _commentText, value);
+    }
 }
