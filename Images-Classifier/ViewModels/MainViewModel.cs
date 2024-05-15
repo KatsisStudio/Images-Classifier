@@ -65,7 +65,7 @@ public class MainViewModel : ViewModelBase
                     ClothesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Clothes).Distinct());
                     SexesAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Sexes).Distinct());
                     OthersChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Others).Distinct());
-                    TextLangChoices.AddRange(Metadatas.Where(x => x.Text != null).Select(x => x.Text.Language));
+                    TextLangChoices.AddRange(Metadatas.Where(x => x.Text != null).Select(x => x.Text.Language).Distinct());
                 }
                 catch (Exception ex)
                 {
@@ -110,6 +110,23 @@ public class MainViewModel : ViewModelBase
         {
             if (Source != null)
             {
+                _currentMetadata.Author = AuthorText;
+                _currentMetadata.Comment = string.IsNullOrEmpty(CommentText) ? null : CommentText;
+                _currentMetadata.Parent = string.IsNullOrEmpty(ParentText) ? null : ParentText;
+                _currentMetadata.Rating = RatingIndex;
+                _currentMetadata.Tags.Characters.Attributes = _attributesContentList.ToArray();
+                _currentMetadata.Tags.Characters.Names = _namesContentList.ToArray();
+                _currentMetadata.Tags.Characters.Races = _racesContentList;
+                _currentMetadata.Tags.Characters.RacialAttributes = _racialAttributesContentList.ToArray();
+                _currentMetadata.Tags.Characters.Sex = _sexesContentList;
+                _currentMetadata.Tags.Clothes = _clothesContentList.ToArray();
+                _currentMetadata.Tags.Others = _othersContentList.ToArray();
+                _currentMetadata.Tags.Parodies = _parodiesContentList.ToArray();
+                _currentMetadata.Tags.Poses = _posesContentList.ToArray();
+                _currentMetadata.Tags.Sexes = _sexesAttributesContentList.ToArray();
+                _currentMetadata.Text = TextLangText == null ? null : new() { Language = TextLangText, Content = _textContentContentList.ToArray() };
+                _currentMetadata.Title = string.IsNullOrEmpty(TitleText) ? null : TitleText;
+
                 _newMetadatas.Add(_currentMetadata);
 
                 var bmp = (Bitmap)Source;
@@ -122,6 +139,9 @@ public class MainViewModel : ViewModelBase
                 bmp.CreateScaledBitmap(new PixelSize((int)(w / ratio), (int)(h / ratio))).Save($"export/thumbnails/{_currentMetadata.Id}.{_currentMetadata.Format}");
 
                 File.WriteAllText("export/info.json", JsonSerializer.Serialize(_newMetadatas));
+
+                ParentChoices.Add(_currentMetadata.Id);
+                // TODO: need to do the rest later on
 
                 ResetAll();
             }
