@@ -135,15 +135,20 @@
 					<TextBox Watermark="Explanation or comment about the image, empty if none"
 								 Text="{Binding CommentText}"></TextBox>
 				</StackPanel>
+				<!--
 				<Viewbox StretchDirection="DownOnly">
 					<Image Source="{Binding Source}"></Image>
 				</Viewbox>
+				-->
+				<!-- Fuck that -->
+				<Image Source="{Binding Source}" Height="800"></Image>
 			</UniformGrid>
 		</StackPanel>
 		<StackPanel Grid.Row="2"
 					Orientation="Horizontal"
 					HorizontalAlignment="Right"
 					VerticalAlignment="Bottom">
+			<Button Command="{Binding DeleteAll}">Delete All Data</Button>
 			<Button Command="{Binding Cancel}">Cancel</Button>
 			<Button Command="{Binding Save}">Save &#38; Next</Button>
 		</StackPanel>

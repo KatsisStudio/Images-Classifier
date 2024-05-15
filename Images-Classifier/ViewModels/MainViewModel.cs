@@ -24,9 +24,7 @@ public class MainViewModel : ViewModelBase
     {
         if (!Design.IsDesignMode)
         {
-            if (!Directory.Exists("export")) Directory.CreateDirectory("export");
-            if (!Directory.Exists("export/images")) Directory.CreateDirectory("export/images");
-            if (!Directory.Exists("export/thumbnails")) Directory.CreateDirectory("export/thumbnails");
+            CreateFolders();
         }
 
         ResetAll();
@@ -124,7 +122,7 @@ public class MainViewModel : ViewModelBase
                 _currentMetadata.Tags.Parodies = _parodiesContentList.ToArray();
                 _currentMetadata.Tags.Poses = _posesContentList.ToArray();
                 _currentMetadata.Tags.Sexes = _sexesAttributesContentList.ToArray();
-                _currentMetadata.Text = TextLangText == null ? null : new() { Language = TextLangText, Content = _textContentContentList.ToArray() };
+                _currentMetadata.Text = string.IsNullOrEmpty(TextLangText) ? null : new() { Language = TextLangText, Content = _textContentContentList.ToArray() };
                 _currentMetadata.Title = string.IsNullOrEmpty(TitleText) ? null : TitleText;
 
                 _newMetadatas.Add(_currentMetadata);
@@ -145,6 +143,12 @@ public class MainViewModel : ViewModelBase
 
                 ResetAll();
             }
+        });
+
+        DeleteAll = ReactiveCommand.Create(() =>
+        {
+            Directory.Delete("export/", true);
+            CreateFolders();
         });
 
         SexesAdd = ReactiveCommand.Create(() =>
@@ -238,6 +242,13 @@ public class MainViewModel : ViewModelBase
         });
     }
 
+    private void CreateFolders()
+    {
+        if (!Directory.Exists("export")) Directory.CreateDirectory("export");
+        if (!Directory.Exists("export/images")) Directory.CreateDirectory("export/images");
+        if (!Directory.Exists("export/thumbnails")) Directory.CreateDirectory("export/thumbnails");
+    }
+
     private void ResetAll()
     {
         Source = null;
@@ -309,6 +320,7 @@ public class MainViewModel : ViewModelBase
     public ICommand ImportMetadataCmd { get; }
     public ICommand Cancel { get; }
     public ICommand Save { get; }
+    public ICommand DeleteAll { get; }
 
     private string _parentText;
     public string ParentText
