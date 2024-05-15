@@ -4,6 +4,8 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using ReactiveUI;
+using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -13,6 +15,11 @@ public class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
+        if (!Directory.Exists("export"))
+        {
+            Directory.CreateDirectory("export");
+        }
+
         ImportImageCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
@@ -26,10 +33,33 @@ public class MainViewModel : ViewModelBase
 
             if (files.Any())
             {
-                Source = new Bitmap(files.ElementAt(0).Path.AbsolutePath);
+                var path = files.ElementAt(0).Path.AbsolutePath;
+                Source = new Bitmap(path);
+                _extension = new FileInfo(path).Extension;
+            }
+        });
+
+        Cancel = ReactiveCommand.Create(ResetAll);
+        Save = ReactiveCommand.Create(() =>
+        {
+            if (Source != null)
+            {
+                var id = Guid.NewGuid();
+
+                var bmp = (Bitmap)Source;
+                bmp.Save($"export/{id}.{_extension}");
+
+                ResetAll();
             }
         });
     }
+
+    private void ResetAll()
+    {
+        Source = null;
+    }
+
+    private string _extension;
 
     private IImage _source;
     public IImage Source
@@ -39,4 +69,6 @@ public class MainViewModel : ViewModelBase
     }
 
     public ICommand ImportImageCmd { get; }
+    public ICommand Cancel { get; }
+    public ICommand Save { get; }
 }

@@ -30,13 +30,12 @@
 				<Image Source="{Binding Source}"></Image>
 			</UniformGrid>
 		</StackPanel>
-		<StackPanel Grid.Row="1"
+		<StackPanel Grid.Row="2"
 					Orientation="Horizontal"
 					HorizontalAlignment="Right"
 					VerticalAlignment="Bottom">
-			<Button>Cancel</Button>
-			<Button>Save &#38; Next</Button>
-			<Button>Export</Button>
+			<Button Command="{Binding Cancel}">Cancel</Button>
+			<Button Command="{Binding Save}">Save &#38; Next</Button>
 		</StackPanel>
 	</Grid>
 </UserControl>
