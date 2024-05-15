@@ -38,12 +38,53 @@
 					<ComboBox SelectedIndex="{Binding RatingIndex}"
 							  ItemsSource="{Binding RatingChoices}"></ComboBox>
 					<TextBlock>Questionnable mean image highly suggestive but showing nothing explicit</TextBlock>
+
 					<StackPanel Orientation="Horizontal">
 						<ComboBox SelectedIndex="{Binding SexesIndex}"
 								  ItemsSource="{Binding SexesChoices}"></ComboBox>
 						<Button Command="{Binding SexesAdd}">Add</Button>
 					</StackPanel>
 					<TextBlock Text="{Binding SexesContent}"></TextBlock>
+
+					<StackPanel Orientation="Horizontal">
+						<AutoCompleteBox Watermark="Media this image parody, if none, keep empty"
+									 Text="{Binding ParodiesText}"
+									 ItemsSource="{Binding ParodiesChoices}"></AutoCompleteBox>
+						<Button Command="{Binding ParodiesAdd}">Add</Button>
+					</StackPanel>
+					<TextBlock Text="{Binding ParodiesContent}"></TextBlock>
+
+					<StackPanel Orientation="Horizontal">
+						<AutoCompleteBox Watermark="Names of the characters, if unsure, keep empty"
+									 Text="{Binding NamesText}"
+									 ItemsSource="{Binding NamesChoices}"></AutoCompleteBox>
+						<Button Command="{Binding NamesAdd}">Add</Button>
+					</StackPanel>
+					<TextBlock Text="{Binding NamesContent}"></TextBlock>
+
+					<StackPanel Orientation="Horizontal">
+						<AutoCompleteBox Watermark="Character races, if uncertain, keep empty"
+									 Text="{Binding RacesContentSel}"
+									 ItemsSource="{Binding RacesChoices}"></AutoCompleteBox>
+						<Button Command="{Binding RacesAdd}">Add</Button>
+					</StackPanel>
+					<TextBlock Text="{Binding RacesContent}"></TextBlock>
+
+					<StackPanel Orientation="Horizontal">
+						<AutoCompleteBox Watermark="Attributes related to the race of your character, skin color, animal ears, tail, etc..."
+									 Text="{Binding RacialAttributesText}"
+									 ItemsSource="{Binding RacialAttributesChoices}"></AutoCompleteBox>
+						<Button Command="{Binding RacialAttributesAdd}">Add</Button>
+					</StackPanel>
+					<TextBlock Text="{Binding RacialAttributesContent}"></TextBlock>
+
+					<StackPanel Orientation="Horizontal">
+						<AutoCompleteBox Watermark="Physical attributes of the characters: hair/eyes, hair, breasts, missing limbs..."
+									 Text="{Binding AttributesText}"
+									 ItemsSource="{Binding AttributesChoices}"></AutoCompleteBox>
+						<Button Command="{Binding AttributesAdd}">Add</Button>
+					</StackPanel>
+					<TextBlock Text="{Binding AttributesContent}"></TextBlock>
 				</StackPanel>
 				<Viewbox StretchDirection="DownOnly">
 					<Image Source="{Binding Source}"></Image>

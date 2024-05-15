@@ -32,8 +32,8 @@ namespace Images_Classifier.Models
 
     public class Tag
     {
-        [JsonPropertyName("parody")]
-        public string[] Parody { set; get; }
+        [JsonPropertyName("parodies")]
+        public string[] Parodies { set; get; }
 
         [JsonPropertyName("characters")]
         public Character Characters { set; get; }

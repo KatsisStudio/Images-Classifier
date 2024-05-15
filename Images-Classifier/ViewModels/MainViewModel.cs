@@ -56,6 +56,11 @@ public class MainViewModel : ViewModelBase
 
                     ParentChoices.AddRange(Metadatas.Select(x => x.Id));
                     AuthorChoices.AddRange(Metadatas.Select(x => x.Author).Distinct());
+                    RacesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Races.Select(x => x.Key).Distinct()));
+                    ParodiesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Parodies).Distinct());
+                    NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Names).Distinct());
+                    RacialAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.RacialAttributes).Distinct());
+                    AttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Attributes).Distinct());
                 }
                 catch (Exception ex)
                 {
@@ -121,6 +126,47 @@ public class MainViewModel : ViewModelBase
             SexesContent = string.Join(", ", _sexesContentList.Select(x => $"{x.Key}: {x.Value}"));
             SexesIndex = 0;
         });
+
+        RacesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = RacesContentSel.ToLowerInvariant();
+            if (_racesContentList.ContainsKey(key)) _racesContentList[key]++;
+            else _racesContentList.Add(key, 1);
+            RacesContent = string.Join(", ", _racesContentList.Select(x => $"{x.Key}: {x.Value}"));
+            RacesContentSel = string.Empty;
+        });
+
+        ParodiesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = ParodiesText.ToLowerInvariant();
+            _parodiesContentList.Add(key);
+            ParodiesContent = string.Join(", ", _parodiesContentList);
+            ParodiesText = string.Empty;
+        });
+
+        NamesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = NamesText.ToLowerInvariant();
+            _namesContentList.Add(key);
+            NamesContent = string.Join(", ", _namesContentList);
+            NamesText = string.Empty;
+        });
+
+        RacialAttributesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = RacialAttributesText.ToLowerInvariant();
+            _racialAttributesContentList.Add(key);
+            RacialAttributesContent = string.Join(", ", _racialAttributesContentList);
+            RacialAttributesText = string.Empty;
+        });
+
+        AttributesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = AttributesText.ToLowerInvariant();
+            _attributesContentList.Add(key);
+            AttributesContent = string.Join(", ", _attributesContentList);
+            AttributesText = string.Empty;
+        });
     }
 
     private void ResetAll()
@@ -129,7 +175,28 @@ public class MainViewModel : ViewModelBase
         _currentMetadata = new()
         {
             Tags = new()
+            {
+                Characters = new()
+            }
         };
+        SexesContent = string.Empty;
+        SexesIndex = 0;
+        _sexesContentList.Clear();
+        RacesContent = string.Empty;
+        RacesContentSel = string.Empty;
+        _racesContentList.Clear();
+        ParodiesContent = string.Empty;
+        ParodiesText = string.Empty;
+        _parodiesContentList.Clear();
+        NamesContent = string.Empty;
+        NamesText = string.Empty;
+        _namesContentList.Clear();
+        RacialAttributesContent = string.Empty;
+        RacialAttributesText = string.Empty;
+        _racialAttributesContentList.Clear();
+        AttributesContent = string.Empty;
+        AttributesText = string.Empty;
+        _attributesContentList.Clear();
     }
 
 
@@ -189,7 +256,7 @@ public class MainViewModel : ViewModelBase
     public ObservableCollection<string> SexesChoices { private set; get; } = [
         "Male", "Female", "Hermaphrodite", "Other"
     ];
-    private Dictionary<string, int> _sexesContentList = new();
+    private Dictionary<string, int> _sexesContentList = [];
     private string _sexesContent = string.Empty;
     public string SexesContent
     {
@@ -197,4 +264,84 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _sexesContent, value);
     }
     public ICommand SexesAdd { get; }
+
+    private string _racesContentSel;
+    public string RacesContentSel
+    {
+        get => _racesContentSel;
+        set => this.RaiseAndSetIfChanged(ref _racesContentSel, value);
+    }
+    public ObservableCollection<string> RacesChoices { private set; get; } = [];
+    private Dictionary<string, int> _racesContentList = [];
+    private string _racesContent = string.Empty;
+    public string RacesContent
+    {
+        get => _racesContent;
+        set => this.RaiseAndSetIfChanged(ref _racesContent, value);
+    }
+    public ICommand RacesAdd { get; }
+
+    private string _parodiesText;
+    public string ParodiesText
+    {
+        get => _parodiesText;
+        set => this.RaiseAndSetIfChanged(ref _parodiesText, value);
+    }
+    public ObservableCollection<string> ParodiesChoices { private set; get; } = [];
+    private List<string> _parodiesContentList = [];
+    private string _parodiesContent = string.Empty;
+    public string ParodiesContent
+    {
+        get => _parodiesContent;
+        set => this.RaiseAndSetIfChanged(ref _parodiesContent, value);
+    }
+    public ICommand ParodiesAdd { get; }
+
+    private string _namesText;
+    public string NamesText
+    {
+        get => _namesText;
+        set => this.RaiseAndSetIfChanged(ref _namesText, value);
+    }
+    public ObservableCollection<string> NamesChoices { private set; get; } = [];
+    private List<string> _namesContentList = [];
+    private string _namesContent = string.Empty;
+    public string NamesContent
+    {
+        get => _namesContent;
+        set => this.RaiseAndSetIfChanged(ref _namesContent, value);
+    }
+    public ICommand NamesAdd { get; }
+
+    private string _racialAttributesText;
+    public string RacialAttributesText
+    {
+        get => _racialAttributesText;
+        set => this.RaiseAndSetIfChanged(ref _racialAttributesText, value);
+    }
+    public ObservableCollection<string> RacialAttributesChoices { private set; get; } = [];
+    private List<string> _racialAttributesContentList = [];
+    private string _racialAttributesContent = string.Empty;
+    public string RacialAttributesContent
+    {
+        get => _racialAttributesContent;
+        set => this.RaiseAndSetIfChanged(ref _racialAttributesContent, value);
+    }
+    public ICommand RacialAttributesAdd { get; }
+
+    private string _attributesText;
+    public string AttributesText
+    {
+        get => _attributesText;
+        set => this.RaiseAndSetIfChanged(ref _attributesText, value);
+    }
+    public ObservableCollection<string> AttributesChoices { private set; get; } = [];
+    private List<string> _attributesContentList = [];
+    private string _attributesContent = string.Empty;
+    public string AttributesContent
+    {
+        get => _attributesContent;
+        set => this.RaiseAndSetIfChanged(ref _attributesContent, value);
+    }
+    public ICommand AttributesAdd { get; }
 }
