@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -15,10 +16,9 @@ public class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-        if (!Directory.Exists("export"))
-        {
-            Directory.CreateDirectory("export");
-        }
+        if (!Directory.Exists("export")) Directory.CreateDirectory("export");
+        if (!Directory.Exists("export/images")) Directory.CreateDirectory("export/images");
+        if (!Directory.Exists("export/thumbnails")) Directory.CreateDirectory("export/thumbnails");
 
         ImportImageCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -33,9 +33,18 @@ public class MainViewModel : ViewModelBase
 
             if (files.Any())
             {
-                var path = files.ElementAt(0).Path.AbsolutePath;
-                Source = new Bitmap(path);
-                _extension = new FileInfo(path).Extension;
+                try
+                {
+                    var path = files.ElementAt(0).Path.AbsolutePath;
+                    Source = new Bitmap(path.Replace("%20", " ")); // wtf Uri
+                    _extension = new FileInfo(path).Extension;
+                }
+                catch (Exception ex)
+                {
+                    if (Debugger.IsAttached)
+                        Debugger.Break();
+                    throw;
+                }
             }
         });
 
@@ -47,7 +56,13 @@ public class MainViewModel : ViewModelBase
                 var id = Guid.NewGuid();
 
                 var bmp = (Bitmap)Source;
-                bmp.Save($"export/{id}.{_extension}");
+                bmp.Save($"export/images/{id}{_extension}");
+
+                var w = bmp.PixelSize.Width;
+                var h = bmp.PixelSize.Height;
+                var ratio = w > h ? (w / 200f) : (h / 300f);
+
+                bmp.CreateScaledBitmap(new PixelSize((int)(w / ratio), (int)(h / ratio))).Save($"export/thumbnails/{id}{_extension}");
 
                 ResetAll();
             }
