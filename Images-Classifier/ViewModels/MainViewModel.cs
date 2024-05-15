@@ -8,6 +8,7 @@ using DynamicData;
 using Images_Classifier.Models;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -27,6 +28,8 @@ public class MainViewModel : ViewModelBase
             if (!Directory.Exists("export/images")) Directory.CreateDirectory("export/images");
             if (!Directory.Exists("export/thumbnails")) Directory.CreateDirectory("export/thumbnails");
         }
+
+        ResetAll();
 
         ImportMetadataCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -52,7 +55,7 @@ public class MainViewModel : ViewModelBase
                     Metadatas = JsonSerializer.Deserialize<ImageData[]>(File.ReadAllText(files.ElementAt(0).Path.AbsolutePath));
 
                     ParentChoices.AddRange(Metadatas.Select(x => x.Id));
-                    AuthorChoices.AddRange(Metadatas.Select(x => x.Author));
+                    AuthorChoices.AddRange(Metadatas.Select(x => x.Author).Distinct());
                 }
                 catch (Exception ex)
                 {
@@ -79,7 +82,9 @@ public class MainViewModel : ViewModelBase
                 {
                     var path = files.ElementAt(0).Path.AbsolutePath;
                     Source = new Bitmap(path.Replace("%20", " ")); // wtf Uri
-                    _extension = new FileInfo(path).Extension;
+
+                    _currentMetadata.Id = Guid.NewGuid().ToString();
+                    _currentMetadata.Format = new FileInfo(path).Extension[1..];
                 }
                 catch (Exception ex)
                 {
@@ -95,28 +100,40 @@ public class MainViewModel : ViewModelBase
         {
             if (Source != null)
             {
-                var id = Guid.NewGuid();
-
                 var bmp = (Bitmap)Source;
-                bmp.Save($"export/images/{id}{_extension}");
+                bmp.Save($"export/images/{_currentMetadata.Id}.{_currentMetadata.Format}");
 
                 var w = bmp.PixelSize.Width;
                 var h = bmp.PixelSize.Height;
                 var ratio = w > h ? (w / 200f) : (h / 300f);
 
-                bmp.CreateScaledBitmap(new PixelSize((int)(w / ratio), (int)(h / ratio))).Save($"export/thumbnails/{id}{_extension}");
+                bmp.CreateScaledBitmap(new PixelSize((int)(w / ratio), (int)(h / ratio))).Save($"export/thumbnails/{_currentMetadata.Id}.{_currentMetadata.Format}");
 
                 ResetAll();
             }
+        });
+
+        SexesAdd = ReactiveCommand.Create(() =>
+        {
+            var key = SexesChoices[SexesIndex].ToLowerInvariant();
+            if (_sexesContentList.ContainsKey(key)) _sexesContentList[key]++;
+            else _sexesContentList.Add(key, 1);
+            SexesContent = string.Join(", ", _sexesContentList.Select(x => $"{x.Key}: {x.Value}"));
+            SexesIndex = 0;
         });
     }
 
     private void ResetAll()
     {
         Source = null;
+        _currentMetadata = new()
+        {
+            Tags = new()
+        };
     }
 
-    private string _extension;
+
+    private ImageData _currentMetadata;
 
     private ImageData[] _metadatas;
     public ImageData[] Metadatas
@@ -162,4 +179,22 @@ public class MainViewModel : ViewModelBase
     public ObservableCollection<string> RatingChoices { private set; get; } = [
         "Safe", "Questionnable", "Explicit"
     ];
+
+    private int _sexesIndex;
+    public int SexesIndex
+    {
+        get => _sexesIndex;
+        set => this.RaiseAndSetIfChanged(ref _sexesIndex, value);
+    }
+    public ObservableCollection<string> SexesChoices { private set; get; } = [
+        "Male", "Female", "Hermaphrodite", "Other"
+    ];
+    private Dictionary<string, int> _sexesContentList = new();
+    private string _sexesContent = string.Empty;
+    public string SexesContent
+    {
+        get => _sexesContent;
+        set => this.RaiseAndSetIfChanged(ref _sexesContent, value);
+    }
+    public ICommand SexesAdd { get; }
 }

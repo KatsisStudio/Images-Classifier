@@ -21,7 +21,7 @@ namespace Images_Classifier.Models
         public int Rating { set; get; }
 
         [JsonPropertyName("text")]
-        public Text Tag { set; get; }
+        public Text Text { set; get; }
 
         [JsonPropertyName("tags")]
         public Tag Tags { set; get; }

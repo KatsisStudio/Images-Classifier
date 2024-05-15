@@ -35,10 +35,19 @@
 					<AutoCompleteBox Watermark="Person who made the image"
 									 Text="{Binding AuthorText}"
 									 ItemsSource="{Binding AuthorChoices}"></AutoCompleteBox>
-					<ListBox SelectedIndex="{Binding RatingIndex}" ItemsSource="{Binding RatingChoices}"></ListBox>
+					<ComboBox SelectedIndex="{Binding RatingIndex}"
+							  ItemsSource="{Binding RatingChoices}"></ComboBox>
 					<TextBlock>Questionnable mean image highly suggestive but showing nothing explicit</TextBlock>
+					<StackPanel Orientation="Horizontal">
+						<ComboBox SelectedIndex="{Binding SexesIndex}"
+								  ItemsSource="{Binding SexesChoices}"></ComboBox>
+						<Button Command="{Binding SexesAdd}">Add</Button>
+					</StackPanel>
+					<TextBlock Text="{Binding SexesContent}"></TextBlock>
 				</StackPanel>
-				<Image Source="{Binding Source}"></Image>
+				<Viewbox StretchDirection="DownOnly">
+					<Image Source="{Binding Source}"></Image>
+				</Viewbox>
 			</UniformGrid>
 		</StackPanel>
 		<StackPanel Grid.Row="2"
