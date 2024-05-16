@@ -63,14 +63,6 @@
 					<TextBlock Text="{Binding NamesContent}"></TextBlock>
 
 					<StackPanel Orientation="Horizontal">
-						<AutoCompleteBox Watermark="Character races, if uncertain, keep empty"
-									 Text="{Binding RacesContentSel}"
-									 ItemsSource="{Binding RacesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding RacesAdd}">Add</Button>
-					</StackPanel>
-					<TextBlock Text="{Binding RacesContent}"></TextBlock>
-
-					<StackPanel Orientation="Horizontal">
 						<AutoCompleteBox Watermark="Attributes related to the race of your character, skin color, animal ears, tail, etc..."
 									 Text="{Binding RacialAttributesText}"
 									 ItemsSource="{Binding RacialAttributesChoices}"></AutoCompleteBox>
@@ -148,7 +140,7 @@
 					Orientation="Horizontal"
 					HorizontalAlignment="Right"
 					VerticalAlignment="Bottom">
-			<Button Command="{Binding DeleteAll}">Delete All Data</Button>
+			<Button Command="{Binding Export}">Export</Button>
 			<Button Command="{Binding Cancel}">Cancel</Button>
 			<Button Command="{Binding Save}">Save &#38; Next</Button>
 		</StackPanel>

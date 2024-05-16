@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
@@ -54,7 +55,6 @@ public class MainViewModel : ViewModelBase
 
                     ParentChoices.AddRange(Metadatas.Select(x => x.Id));
                     AuthorChoices.AddRange(Metadatas.Select(x => x.Author).Distinct());
-                    RacesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Races.Select(x => x.Key).Distinct()));
                     ParodiesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Parodies).Distinct());
                     NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Names).Distinct());
                     RacialAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.RacialAttributes).Distinct());
@@ -114,7 +114,6 @@ public class MainViewModel : ViewModelBase
                 _currentMetadata.Rating = RatingIndex;
                 _currentMetadata.Tags.Characters.Attributes = _attributesContentList.ToArray();
                 _currentMetadata.Tags.Characters.Names = _namesContentList.ToArray();
-                _currentMetadata.Tags.Characters.Races = _racesContentList;
                 _currentMetadata.Tags.Characters.RacialAttributes = _racialAttributesContentList.ToArray();
                 _currentMetadata.Tags.Characters.Sex = _sexesContentList;
                 _currentMetadata.Tags.Clothes = _clothesContentList.ToArray();
@@ -145,8 +144,14 @@ public class MainViewModel : ViewModelBase
             }
         });
 
-        DeleteAll = ReactiveCommand.Create(() =>
+        Export = ReactiveCommand.Create(() =>
         {
+            if (File.Exists("export.zip")) File.Delete("export.zip");
+
+            ZipFile.CreateFromDirectory("export/", "export.zip");
+
+            Process.Start("explorer.exe", "export.zip");
+
             Directory.Delete("export/", true);
             CreateFolders();
         });
@@ -158,15 +163,6 @@ public class MainViewModel : ViewModelBase
             else _sexesContentList.Add(key, 1);
             SexesContent = string.Join(", ", _sexesContentList.Select(x => $"{x.Key}: {x.Value}"));
             SexesIndex = 0;
-        });
-
-        RacesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = RacesContentSel.ToLowerInvariant();
-            if (_racesContentList.ContainsKey(key)) _racesContentList[key]++;
-            else _racesContentList.Add(key, 1);
-            RacesContent = string.Join(", ", _racesContentList.Select(x => $"{x.Key}: {x.Value}"));
-            RacesContentSel = string.Empty;
         });
 
         ParodiesAdd = ReactiveCommand.Create(() =>
@@ -235,7 +231,7 @@ public class MainViewModel : ViewModelBase
 
         TextContentAdd = ReactiveCommand.Create(() =>
         {
-            var key = TextContentText.ToLowerInvariant();
+            var key = TextContentText;
             _textContentContentList.Add(key);
             TextContentContent = string.Join(", ", _textContentContentList);
             TextContentText = string.Empty;
@@ -262,9 +258,6 @@ public class MainViewModel : ViewModelBase
         SexesContent = string.Empty;
         SexesIndex = 0;
         _sexesContentList.Clear();
-        RacesContent = string.Empty;
-        RacesContentSel = string.Empty;
-        _racesContentList.Clear();
         ParodiesContent = string.Empty;
         ParodiesText = string.Empty;
         _parodiesContentList.Clear();
@@ -320,7 +313,7 @@ public class MainViewModel : ViewModelBase
     public ICommand ImportMetadataCmd { get; }
     public ICommand Cancel { get; }
     public ICommand Save { get; }
-    public ICommand DeleteAll { get; }
+    public ICommand Export { get; }
 
     private string _parentText;
     public string ParentText
@@ -365,22 +358,6 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _sexesContent, value);
     }
     public ICommand SexesAdd { get; }
-
-    private string _racesContentSel;
-    public string RacesContentSel
-    {
-        get => _racesContentSel;
-        set => this.RaiseAndSetIfChanged(ref _racesContentSel, value);
-    }
-    public ObservableCollection<string> RacesChoices { private set; get; } = [];
-    private Dictionary<string, int> _racesContentList = [];
-    private string _racesContent = string.Empty;
-    public string RacesContent
-    {
-        get => _racesContent;
-        set => this.RaiseAndSetIfChanged(ref _racesContent, value);
-    }
-    public ICommand RacesAdd { get; }
 
     private string _parodiesText;
     public string ParodiesText
