@@ -59,9 +59,6 @@ namespace Images_Classifier.Models
         [JsonPropertyName("sexes")]
         public Dictionary<string, int> Sex { set; get; }
 
-        [JsonPropertyName("races")]
-        public Dictionary<string, int> Races { set; get; }
-
         [JsonPropertyName("names")]
         public string[] Names { set; get; }
 

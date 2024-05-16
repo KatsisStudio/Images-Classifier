@@ -28,6 +28,11 @@ public class MainViewModel : ViewModelBase
             CreateFolders();
         }
 
+        if (File.Exists("export/info.json"))
+        {
+            _newMetadatas.AddRange(JsonSerializer.Deserialize<ImageData[]>(File.ReadAllText("export/info.json")));
+        }
+
         ResetAll();
 
         ImportMetadataCmd = ReactiveCommand.CreateFromTask(async () =>
