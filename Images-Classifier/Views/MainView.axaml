@@ -28,7 +28,7 @@
 		</StackPanel>
 		<StackPanel Grid.Row="1">
 			<UniformGrid>
-				<StackPanel IsVisible="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
+				<StackPanel>
 					<AutoCompleteBox Watermark="Image identifier of the parent (same image but happening 'before'), let empty is none"
 									 Text="{Binding ParentText}"
 									 ItemsSource="{Binding ParentChoices}"></AutoCompleteBox>
@@ -36,89 +36,96 @@
 									 Text="{Binding AuthorText}"
 									 ItemsSource="{Binding AuthorChoices}"></AutoCompleteBox>
 					<ComboBox SelectedIndex="{Binding RatingIndex}"
-							  ItemsSource="{Binding RatingChoices}"></ComboBox>
+							  ItemsSource="{Binding RatingChoices}"
+							  HorizontalAlignment="Stretch"></ComboBox>
 					<TextBlock>Questionnable mean image highly suggestive but showing nothing explicit</TextBlock>
 
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+					<Grid ColumnDefinitions="*,50">
 						<ComboBox SelectedIndex="{Binding SexesIndex}"
-								  ItemsSource="{Binding SexesChoices}"></ComboBox>
-						<Button Command="{Binding SexesAdd}">Add</Button>
-					</StackPanel>
+								  ItemsSource="{Binding SexesChoices}"
+								  HorizontalAlignment="Stretch"
+								  Grid.Column="0"></ComboBox>
+						<Button Command="{Binding SexesAdd}"
+								Width="50"
+								Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding SexesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="Media this image parody, if none, keep empty"
 									 Text="{Binding ParodiesText}"
-									 ItemsSource="{Binding ParodiesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding ParodiesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding ParodiesChoices}"
+									 Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding ParodiesAdd}"
+								Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding ParodiesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="Names of the characters, if unsure, keep empty"
 									 Text="{Binding NamesText}"
-									 ItemsSource="{Binding NamesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding NamesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding NamesChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding NamesAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding NamesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="Attributes related to the race of your character, skin color, animal ears, tail, etc..."
 									 Text="{Binding RacialAttributesText}"
-									 ItemsSource="{Binding RacialAttributesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding RacialAttributesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding RacialAttributesChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding RacialAttributesAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding RacialAttributesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="Physical attributes of the characters: hair/eyes, hair, breasts, missing limbs..."
 									 Text="{Binding AttributesText}"
-									 ItemsSource="{Binding AttributesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding AttributesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding AttributesChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding AttributesAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding AttributesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="How is your character and the camera pose-wise, is the character full view, what position it's in, etc..."
 									 Text="{Binding PosesText}"
-									 ItemsSource="{Binding PosesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding PosesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding PosesChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding PosesAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding PosesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="Clothes on the characters, if none use the naked tag"
 									 Text="{Binding ClothesText}"
-									 ItemsSource="{Binding ClothesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding ClothesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding ClothesChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding ClothesAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding ClothesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="Sexual stuffs happening, ejaculations, penetrations, sexual positions..."
 									 Text="{Binding SexesAttributesText}"
-									 ItemsSource="{Binding SexesAttributesChoices}"></AutoCompleteBox>
-						<Button Command="{Binding SexesAttributesAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding SexesAttributesChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding SexesAttributesAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding SexesAttributesContent}"></TextBlock>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<AutoCompleteBox Watermark="All the others tags that didn't fit in the others categories"
 									 Text="{Binding OthersText}"
-									 ItemsSource="{Binding OthersChoices}"></AutoCompleteBox>
-						<Button Command="{Binding OthersAdd}">Add</Button>
-					</StackPanel>
+									 ItemsSource="{Binding OthersChoices}" Grid.Column="0"></AutoCompleteBox>
+						<Button Command="{Binding OthersAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding OthersContent}"></TextBlock>
 
 					<AutoCompleteBox Watermark="If there is text on the image, what language it's on, else let empty"
 								 Text="{Binding TextLangText}"
-								 ItemsSource="{Binding TextLangChoices}"></AutoCompleteBox>
+							 ItemsSource="{Binding TextLangChoices}"></AutoCompleteBox>
 
-					<StackPanel Orientation="Horizontal">
+					<Grid ColumnDefinitions="*,50">
 						<TextBox Watermark="If there is text on the image, what is written on each of them, else let empty"
-									 Text="{Binding TextContentText}"></TextBox>
-						<Button Command="{Binding TextContentAdd}">Add</Button>
-					</StackPanel>
+									 Text="{Binding TextContentText}" Grid.Column="0"></TextBox>
+						<Button Command="{Binding TextContentAdd}" Grid.Column="1">Add</Button>
+					</Grid>
 					<TextBlock Text="{Binding TextContentContent}"></TextBlock>
 
 					<TextBox Watermark="Title of the image, empty if none"
