@@ -28,7 +28,7 @@
 		</StackPanel>
 		<StackPanel Grid.Row="1">
 			<UniformGrid>
-				<StackPanel>
+				<StackPanel IsVisible="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
 					<AutoCompleteBox Watermark="Image identifier of the parent (same image but happening 'before'), let empty is none"
 									 Text="{Binding ParentText}"
 									 ItemsSource="{Binding ParentChoices}"></AutoCompleteBox>
