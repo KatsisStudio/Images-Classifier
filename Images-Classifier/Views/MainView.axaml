@@ -28,7 +28,6 @@
             Grid.Row="0"
             VerticalAlignment="Top"
             Orientation="Horizontal">
-            <Button Command="{Binding ImportMetadataCmd}">Import metadata</Button>
             <Button Command="{Binding ImportImageCmd}" IsEnabled="{Binding Metadatas, Converter={x:Static ObjectConverters.IsNotNull}}">Import image</Button>
         </StackPanel>
         <StackPanel Grid.Row="1">

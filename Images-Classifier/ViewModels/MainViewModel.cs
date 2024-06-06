@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Windows.Input;
 
@@ -32,46 +33,29 @@ public class MainViewModel : ViewModelBase
         {
             _newMetadatas.AddRange(JsonSerializer.Deserialize<ImageData[]>(File.ReadAllText("export/info.json")));
         }
-
         ResetAll();
 
-        ImportMetadataCmd = ReactiveCommand.CreateFromTask(async () =>
+        try
         {
-            var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
-
-            var files = await mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            string json;
+            using (HttpClient http = new())
             {
-                Title = "Open Metadata File",
-                AllowMultiple = false,
-                FileTypeFilter = [
-                    new FilePickerFileType("JSON file")
-                    {
-                        Patterns = [ "*.json" ],
-                        MimeTypes = [ "application/json" ]
-                    }
-                ]
-            });
-
-            if (files.Any())
-            {
-                try
-                {
-                    Metadatas = JsonSerializer.Deserialize<ImageData[]>(File.ReadAllText(files.ElementAt(0).Path.AbsolutePath));
-
-                    ParentChoices.AddRange(Metadatas.Select(x => x.Id));
-                    AuthorChoices.AddRange(Metadatas.Select(x => x.Author).Distinct());
-                    ParodiesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Parodies).Distinct());
-                    NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters).Distinct());
-                    OthersChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Others).Distinct());
-                    TextLangChoices.AddRange(Metadatas.Where(x => x.Text != null).Select(x => x.Text.Language).Distinct());
-                }
-                catch (Exception ex)
-                {
-                    if (Debugger.IsAttached)
-                        Debugger.Break();
-                }
+                json = http.GetStringAsync("https://gallery.katsis.net/data/info.json").GetAwaiter().GetResult();
             }
-        });
+            Metadatas = JsonSerializer.Deserialize<ImageData[]>(json);
+
+            ParentChoices.AddRange(Metadatas.Select(x => x.Id));
+            AuthorChoices.AddRange(Metadatas.Select(x => x.Author).Distinct());
+            ParodiesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Parodies).Distinct());
+            NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters).Distinct());
+            OthersChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Others).Distinct());
+            TextLangChoices.AddRange(Metadatas.Where(x => x.Text != null).Select(x => x.Text.Language).Distinct());
+        }
+        catch (Exception ex)
+        {
+            if (Debugger.IsAttached)
+                Debugger.Break();
+        }
 
         ImportImageCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -234,7 +218,6 @@ public class MainViewModel : ViewModelBase
     }
 
     public ICommand ImportImageCmd { get; }
-    public ICommand ImportMetadataCmd { get; }
     public ICommand Cancel { get; }
     public ICommand Save { get; }
     public ICommand Export { get; }
