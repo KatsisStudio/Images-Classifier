@@ -39,34 +39,10 @@ namespace Images_Classifier.Models
         public string[] Parodies { set; get; }
 
         [JsonPropertyName("characters")]
-        public Character Characters { set; get; }
-
-        [JsonPropertyName("poses")]
-        public string[] Poses { set; get; }
-
-        [JsonPropertyName("clothes")]
-        public string[] Clothes { set; get; }
-
-        [JsonPropertyName("sexes")]
-        public string[] Sexes { set; get; }
+        public string[] Characters { set; get; }
 
         [JsonPropertyName("others")]
         public string[] Others { set; get; }
-    }
-
-    public class Character
-    {
-        [JsonPropertyName("sexes")]
-        public Dictionary<string, int> Sex { set; get; }
-
-        [JsonPropertyName("names")]
-        public string[] Names { set; get; }
-
-        [JsonPropertyName("racial_attributes")]
-        public string[] RacialAttributes { set; get; }
-
-        [JsonPropertyName("attributes")]
-        public string[] Attributes { set; get; }
     }
 
     public class Text

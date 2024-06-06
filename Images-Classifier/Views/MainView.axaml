@@ -1,155 +1,118 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:Images_Classifier.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Images_Classifier.Views.MainView"
-             x:DataType="vm:MainViewModel">
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
-  </Design.DataContext>
+<UserControl
+    x:Class="Images_Classifier.Views.MainView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Images_Classifier.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainViewModel />
+    </Design.DataContext>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
 
-		<StackPanel Grid.Row="0"
-					Orientation="Horizontal"
-					VerticalAlignment="Top">
-			<Button Command="{Binding ImportMetadataCmd}">Import metadata</Button>
-			<Button Command="{Binding ImportImageCmd}"
-					 IsEnabled="{Binding Metadatas, Converter={x:Static ObjectConverters.IsNotNull}}">Import image</Button>
-		</StackPanel>
-		<StackPanel Grid.Row="1">
-			<UniformGrid>
-				<StackPanel IsVisible="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
-					<AutoCompleteBox Watermark="Image identifier of the parent (same image but happening 'before'), let empty is none"
-									 Text="{Binding ParentText}"
-									 ItemsSource="{Binding ParentChoices}"></AutoCompleteBox>
-					<AutoCompleteBox Watermark="Person who made the image"
-									 Text="{Binding AuthorText}"
-									 ItemsSource="{Binding AuthorChoices}"></AutoCompleteBox>
-					<ComboBox SelectedIndex="{Binding RatingIndex}"
-							  ItemsSource="{Binding RatingChoices}"
-							  HorizontalAlignment="Stretch"></ComboBox>
-					<TextBlock>Questionnable mean image highly suggestive but showing nothing explicit</TextBlock>
+        <StackPanel
+            Grid.Row="0"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <Button Command="{Binding ImportMetadataCmd}">Import metadata</Button>
+            <Button Command="{Binding ImportImageCmd}" IsEnabled="{Binding Metadatas, Converter={x:Static ObjectConverters.IsNotNull}}">Import image</Button>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <UniformGrid>
+                <StackPanel IsVisible="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <AutoCompleteBox
+                        ItemsSource="{Binding ParentChoices}"
+                        Text="{Binding ParentText}"
+                        Watermark="Image identifier of the parent (same image but happening 'before'), let empty is none" />
+                    <AutoCompleteBox
+                        ItemsSource="{Binding AuthorChoices}"
+                        Text="{Binding AuthorText}"
+                        Watermark="Person who made the image" />
+                    <ComboBox
+                        HorizontalAlignment="Stretch"
+                        ItemsSource="{Binding RatingChoices}"
+                        SelectedIndex="{Binding RatingIndex}" />
+                    <TextBlock>Questionnable mean image highly suggestive but showing nothing explicit</TextBlock>
 
-					<Grid ColumnDefinitions="*,50">
-						<ComboBox SelectedIndex="{Binding SexesIndex}"
-								  ItemsSource="{Binding SexesChoices}"
-								  HorizontalAlignment="Stretch"
-								  Grid.Column="0"></ComboBox>
-						<Button Command="{Binding SexesAdd}"
-								Width="50"
-								Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding SexesContent}"></TextBlock>
+                    <Grid ColumnDefinitions="*,50">
+                        <AutoCompleteBox
+                            Grid.Column="0"
+                            ItemsSource="{Binding ParodiesChoices}"
+                            Text="{Binding ParodiesText}"
+                            Watermark="Media this image parody, if none, keep empty" />
+                        <Button Grid.Column="1" Command="{Binding ParodiesAdd}">Add</Button>
+                    </Grid>
+                    <TextBlock Text="{Binding ParodiesContent}" />
 
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="Media this image parody, if none, keep empty"
-									 Text="{Binding ParodiesText}"
-									 ItemsSource="{Binding ParodiesChoices}"
-									 Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding ParodiesAdd}"
-								Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding ParodiesContent}"></TextBlock>
+                    <Grid ColumnDefinitions="*,50">
+                        <AutoCompleteBox
+                            Grid.Column="0"
+                            ItemsSource="{Binding NamesChoices}"
+                            Text="{Binding NamesText}"
+                            Watermark="Names of the characters, if unsure, keep empty" />
+                        <Button Grid.Column="1" Command="{Binding NamesAdd}">Add</Button>
+                    </Grid>
+                    <TextBlock Text="{Binding NamesContent}" />
 
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="Names of the characters, if unsure, keep empty"
-									 Text="{Binding NamesText}"
-									 ItemsSource="{Binding NamesChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding NamesAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding NamesContent}"></TextBlock>
+                    <Grid ColumnDefinitions="*,50">
+                        <AutoCompleteBox
+                            Grid.Column="0"
+                            ItemsSource="{Binding OthersChoices}"
+                            Text="{Binding OthersText}"
+                            Watermark="All the others tags that didn't fit in the others categories" />
+                        <Button Grid.Column="1" Command="{Binding OthersAdd}">Add</Button>
+                    </Grid>
+                    <TextBlock Text="{Binding OthersContent}" />
 
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="Attributes related to the race of your character, skin color, animal ears, tail, etc..."
-									 Text="{Binding RacialAttributesText}"
-									 ItemsSource="{Binding RacialAttributesChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding RacialAttributesAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding RacialAttributesContent}"></TextBlock>
+                    <AutoCompleteBox
+                        ItemsSource="{Binding TextLangChoices}"
+                        Text="{Binding TextLangText}"
+                        Watermark="If there is text on the image, what language it's on, else let empty" />
 
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="Physical attributes of the characters: hair/eyes, hair, breasts, missing limbs..."
-									 Text="{Binding AttributesText}"
-									 ItemsSource="{Binding AttributesChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding AttributesAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding AttributesContent}"></TextBlock>
+                    <Grid ColumnDefinitions="*,50">
+                        <TextBox
+                            Grid.Column="0"
+                            Text="{Binding TextContentText}"
+                            Watermark="If there is text on the image, what is written on each of them, else let empty" />
+                        <Button Grid.Column="1" Command="{Binding TextContentAdd}">Add</Button>
+                    </Grid>
+                    <TextBlock Text="{Binding TextContentContent}" />
 
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="How is your character and the camera pose-wise, is the character full view, what position it's in, etc..."
-									 Text="{Binding PosesText}"
-									 ItemsSource="{Binding PosesChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding PosesAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding PosesContent}"></TextBlock>
+                    <TextBox Text="{Binding TitleText}" Watermark="Title of the image, empty if none" />
 
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="Clothes on the characters, if none use the naked tag"
-									 Text="{Binding ClothesText}"
-									 ItemsSource="{Binding ClothesChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding ClothesAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding ClothesContent}"></TextBlock>
-
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="Sexual stuffs happening, ejaculations, penetrations, sexual positions..."
-									 Text="{Binding SexesAttributesText}"
-									 ItemsSource="{Binding SexesAttributesChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding SexesAttributesAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding SexesAttributesContent}"></TextBlock>
-
-					<Grid ColumnDefinitions="*,50">
-						<AutoCompleteBox Watermark="All the others tags that didn't fit in the others categories"
-									 Text="{Binding OthersText}"
-									 ItemsSource="{Binding OthersChoices}" Grid.Column="0"></AutoCompleteBox>
-						<Button Command="{Binding OthersAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding OthersContent}"></TextBlock>
-
-					<AutoCompleteBox Watermark="If there is text on the image, what language it's on, else let empty"
-								 Text="{Binding TextLangText}"
-							 ItemsSource="{Binding TextLangChoices}"></AutoCompleteBox>
-
-					<Grid ColumnDefinitions="*,50">
-						<TextBox Watermark="If there is text on the image, what is written on each of them, else let empty"
-									 Text="{Binding TextContentText}" Grid.Column="0"></TextBox>
-						<Button Command="{Binding TextContentAdd}" Grid.Column="1">Add</Button>
-					</Grid>
-					<TextBlock Text="{Binding TextContentContent}"></TextBlock>
-
-					<TextBox Watermark="Title of the image, empty if none"
-								 Text="{Binding TitleText}"></TextBox>
-
-					<TextBox Watermark="Explanation or comment about the image, empty if none"
-								 Text="{Binding CommentText}"></TextBox>
-				</StackPanel>
-				<!--
+                    <TextBox Text="{Binding CommentText}" Watermark="Explanation or comment about the image, empty if none" />
+                </StackPanel>
+                <!--
 				<Viewbox StretchDirection="DownOnly">
 					<Image Source="{Binding Source}"></Image>
 				</Viewbox>
 				-->
-				<!-- Fuck that -->
-				<Image Source="{Binding Source}" Height="800"></Image>
-			</UniformGrid>
-		</StackPanel>
-		<StackPanel Grid.Row="2"
-					Orientation="Horizontal"
-					HorizontalAlignment="Right"
-					VerticalAlignment="Bottom">
-			<Button Command="{Binding Export}">Export</Button>
-			<Button Command="{Binding Cancel}">Cancel</Button>
-			<Button Command="{Binding Save}">Save &#38; Next</Button>
-		</StackPanel>
-	</Grid>
+                <!--  Fuck that  -->
+                <Image Height="800" Source="{Binding Source}" />
+            </UniformGrid>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal">
+            <Button Command="{Binding Export}">Export</Button>
+            <Button Command="{Binding Cancel}">Cancel</Button>
+            <Button Command="{Binding Save}">Save &#38; Next</Button>
+        </StackPanel>
+    </Grid>
 </UserControl>

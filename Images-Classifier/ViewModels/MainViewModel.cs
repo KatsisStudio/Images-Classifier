@@ -61,12 +61,7 @@ public class MainViewModel : ViewModelBase
                     ParentChoices.AddRange(Metadatas.Select(x => x.Id));
                     AuthorChoices.AddRange(Metadatas.Select(x => x.Author).Distinct());
                     ParodiesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Parodies).Distinct());
-                    NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Names).Distinct());
-                    RacialAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.RacialAttributes).Distinct());
-                    AttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters.Attributes).Distinct());
-                    PosesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Poses).Distinct());
-                    ClothesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Clothes).Distinct());
-                    SexesAttributesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Sexes).Distinct());
+                    NamesChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Characters).Distinct());
                     OthersChoices.AddRange(Metadatas.SelectMany(x => x.Tags.Others).Distinct());
                     TextLangChoices.AddRange(Metadatas.Where(x => x.Text != null).Select(x => x.Text.Language).Distinct());
                 }
@@ -117,15 +112,9 @@ public class MainViewModel : ViewModelBase
                 _currentMetadata.Comment = string.IsNullOrEmpty(CommentText) ? null : CommentText;
                 _currentMetadata.Parent = string.IsNullOrEmpty(ParentText) ? null : ParentText;
                 _currentMetadata.Rating = RatingIndex;
-                _currentMetadata.Tags.Characters.Attributes = _attributesContentList.ToArray();
-                _currentMetadata.Tags.Characters.Names = _namesContentList.ToArray();
-                _currentMetadata.Tags.Characters.RacialAttributes = _racialAttributesContentList.ToArray();
-                _currentMetadata.Tags.Characters.Sex = _sexesContentList;
-                _currentMetadata.Tags.Clothes = _clothesContentList.ToArray();
+                _currentMetadata.Tags.Characters = _namesContentList.ToArray();
                 _currentMetadata.Tags.Others = _othersContentList.ToArray();
                 _currentMetadata.Tags.Parodies = _parodiesContentList.ToArray();
-                _currentMetadata.Tags.Poses = _posesContentList.ToArray();
-                _currentMetadata.Tags.Sexes = _sexesAttributesContentList.ToArray();
                 _currentMetadata.Text = string.IsNullOrEmpty(TextLangText) ? null : new() { Language = TextLangText, Content = _textContentContentList.ToArray() };
                 _currentMetadata.Title = string.IsNullOrEmpty(TitleText) ? null : TitleText;
 
@@ -161,15 +150,6 @@ public class MainViewModel : ViewModelBase
             CreateFolders();
         });
 
-        SexesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = SexesChoices[SexesIndex].ToLowerInvariant();
-            if (_sexesContentList.ContainsKey(key)) _sexesContentList[key]++;
-            else _sexesContentList.Add(key, 1);
-            SexesContent = string.Join(", ", _sexesContentList.Select(x => $"{x.Key}: {x.Value}"));
-            SexesIndex = 0;
-        });
-
         ParodiesAdd = ReactiveCommand.Create(() =>
         {
             var key = ParodiesText.ToLowerInvariant();
@@ -184,46 +164,6 @@ public class MainViewModel : ViewModelBase
             _namesContentList.Add(key);
             NamesContent = string.Join(", ", _namesContentList);
             NamesText = string.Empty;
-        });
-
-        RacialAttributesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = RacialAttributesText.ToLowerInvariant();
-            _racialAttributesContentList.Add(key);
-            RacialAttributesContent = string.Join(", ", _racialAttributesContentList);
-            RacialAttributesText = string.Empty;
-        });
-
-        AttributesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = AttributesText.ToLowerInvariant();
-            _attributesContentList.Add(key);
-            AttributesContent = string.Join(", ", _attributesContentList);
-            AttributesText = string.Empty;
-        });
-
-        PosesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = PosesText.ToLowerInvariant();
-            _posesContentList.Add(key);
-            PosesContent = string.Join(", ", _posesContentList);
-            PosesText = string.Empty;
-        });
-
-        ClothesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = ClothesText.ToLowerInvariant();
-            _clothesContentList.Add(key);
-            ClothesContent = string.Join(", ", _clothesContentList);
-            ClothesText = string.Empty;
-        });
-
-        SexesAttributesAdd = ReactiveCommand.Create(() =>
-        {
-            var key = SexesAttributesText.ToLowerInvariant();
-            _sexesAttributesContentList.Add(key);
-            SexesAttributesContent = string.Join(", ", _sexesAttributesContentList);
-            SexesAttributesText = string.Empty;
         });
 
         OthersAdd = ReactiveCommand.Create(() =>
@@ -256,34 +196,13 @@ public class MainViewModel : ViewModelBase
         _currentMetadata = new()
         {
             Tags = new()
-            {
-                Characters = new()
-            }
         };
-        SexesContent = string.Empty;
-        SexesIndex = 0;
-        _sexesContentList.Clear();
         ParodiesContent = string.Empty;
         ParodiesText = string.Empty;
         _parodiesContentList.Clear();
         NamesContent = string.Empty;
         NamesText = string.Empty;
         _namesContentList.Clear();
-        RacialAttributesContent = string.Empty;
-        RacialAttributesText = string.Empty;
-        _racialAttributesContentList.Clear();
-        AttributesContent = string.Empty;
-        AttributesText = string.Empty;
-        _attributesContentList.Clear();
-        PosesContent = string.Empty;
-        PosesText = string.Empty;
-        _posesContentList.Clear();
-        ClothesContent = string.Empty;
-        ClothesText = string.Empty;
-        _clothesContentList.Clear();
-        SexesAttributesContent = string.Empty;
-        SexesAttributesText = string.Empty;
-        _sexesAttributesContentList.Clear();
         OthersContent = string.Empty;
         OthersText = string.Empty;
         _othersContentList.Clear();
@@ -343,26 +262,8 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _ratingIndex, value);
     }
     public ObservableCollection<string> RatingChoices { private set; get; } = [
-        "Safe", "Questionnable", "Explicit"
+        "Safe", "Questionable", "Explicit"
     ];
-
-    private int _sexesIndex;
-    public int SexesIndex
-    {
-        get => _sexesIndex;
-        set => this.RaiseAndSetIfChanged(ref _sexesIndex, value);
-    }
-    public ObservableCollection<string> SexesChoices { private set; get; } = [
-        "Male", "Female", "Hermaphrodite", "Other"
-    ];
-    private Dictionary<string, int> _sexesContentList = [];
-    private string _sexesContent = string.Empty;
-    public string SexesContent
-    {
-        get => _sexesContent;
-        set => this.RaiseAndSetIfChanged(ref _sexesContent, value);
-    }
-    public ICommand SexesAdd { get; }
 
     private string _parodiesText;
     public string ParodiesText
@@ -395,86 +296,6 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _namesContent, value);
     }
     public ICommand NamesAdd { get; }
-
-    private string _racialAttributesText;
-    public string RacialAttributesText
-    {
-        get => _racialAttributesText;
-        set => this.RaiseAndSetIfChanged(ref _racialAttributesText, value);
-    }
-    public ObservableCollection<string> RacialAttributesChoices { private set; get; } = [];
-    private List<string> _racialAttributesContentList = [];
-    private string _racialAttributesContent = string.Empty;
-    public string RacialAttributesContent
-    {
-        get => _racialAttributesContent;
-        set => this.RaiseAndSetIfChanged(ref _racialAttributesContent, value);
-    }
-    public ICommand RacialAttributesAdd { get; }
-
-    private string _attributesText;
-    public string AttributesText
-    {
-        get => _attributesText;
-        set => this.RaiseAndSetIfChanged(ref _attributesText, value);
-    }
-    public ObservableCollection<string> AttributesChoices { private set; get; } = [];
-    private List<string> _attributesContentList = [];
-    private string _attributesContent = string.Empty;
-    public string AttributesContent
-    {
-        get => _attributesContent;
-        set => this.RaiseAndSetIfChanged(ref _attributesContent, value);
-    }
-    public ICommand AttributesAdd { get; }
-
-    private string _posesText;
-    public string PosesText
-    {
-        get => _posesText;
-        set => this.RaiseAndSetIfChanged(ref _posesText, value);
-    }
-    public ObservableCollection<string> PosesChoices { private set; get; } = [];
-    private List<string> _posesContentList = [];
-    private string _posesContent = string.Empty;
-    public string PosesContent
-    {
-        get => _posesContent;
-        set => this.RaiseAndSetIfChanged(ref _posesContent, value);
-    }
-    public ICommand PosesAdd { get; }
-
-    private string _clothesText;
-    public string ClothesText
-    {
-        get => _clothesText;
-        set => this.RaiseAndSetIfChanged(ref _clothesText, value);
-    }
-    public ObservableCollection<string> ClothesChoices { private set; get; } = [];
-    private List<string> _clothesContentList = [];
-    private string _clothesContent = string.Empty;
-    public string ClothesContent
-    {
-        get => _clothesContent;
-        set => this.RaiseAndSetIfChanged(ref _clothesContent, value);
-    }
-    public ICommand ClothesAdd { get; }
-
-    private string _sexesAttributesText;
-    public string SexesAttributesText
-    {
-        get => _sexesAttributesText;
-        set => this.RaiseAndSetIfChanged(ref _sexesAttributesText, value);
-    }
-    public ObservableCollection<string> SexesAttributesChoices { private set; get; } = [];
-    private List<string> _sexesAttributesContentList = [];
-    private string _sexesAttributesContent = string.Empty;
-    public string SexesAttributesContent
-    {
-        get => _sexesAttributesContent;
-        set => this.RaiseAndSetIfChanged(ref _sexesAttributesContent, value);
-    }
-    public ICommand SexesAttributesAdd { get; }
 
     private string _othersText;
     public string OthersText
