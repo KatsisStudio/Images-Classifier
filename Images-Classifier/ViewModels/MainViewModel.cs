@@ -73,6 +73,7 @@ public class MainViewModel : ViewModelBase
                 try
                 {
                     var path = files.ElementAt(0).Path.AbsolutePath;
+                    var putain = path.Replace("%20", " ");
                     Source = new Bitmap(path.Replace("%20", " ")); // wtf Uri
 
                     _currentMetadata.Id = Guid.NewGuid().ToString();
@@ -92,6 +93,11 @@ public class MainViewModel : ViewModelBase
         {
             if (Source != null)
             {
+                ParodiesAdd.Execute(null);
+                NamesAdd.Execute(null);
+                OthersAdd.Execute(null);
+                TextContentAdd.Execute(null);
+
                 _currentMetadata.Author = AuthorText;
                 _currentMetadata.Comment = string.IsNullOrEmpty(CommentText) ? null : CommentText;
                 _currentMetadata.Parent = string.IsNullOrEmpty(ParentText) ? null : ParentText;
@@ -124,6 +130,8 @@ public class MainViewModel : ViewModelBase
 
         Export = ReactiveCommand.Create(() =>
         {
+            Save.Execute(null);
+
             if (File.Exists("export.zip")) File.Delete("export.zip");
 
             ZipFile.CreateFromDirectory("export/", "export.zip");
@@ -136,7 +144,8 @@ public class MainViewModel : ViewModelBase
 
         ParodiesAdd = ReactiveCommand.Create(() =>
         {
-            var key = ParodiesText.ToLowerInvariant();
+            var key = ParodiesText.ToLowerInvariant().Trim();
+            if (string.IsNullOrEmpty(key)) return;
             _parodiesContentList.Add(key);
             ParodiesContent = string.Join(", ", _parodiesContentList);
             ParodiesText = string.Empty;
@@ -144,7 +153,8 @@ public class MainViewModel : ViewModelBase
 
         NamesAdd = ReactiveCommand.Create(() =>
         {
-            var key = NamesText.ToLowerInvariant();
+            var key = NamesText.ToLowerInvariant().Trim();
+            if (string.IsNullOrEmpty(key)) return;
             _namesContentList.Add(key);
             NamesContent = string.Join(", ", _namesContentList);
             NamesText = string.Empty;
@@ -152,7 +162,8 @@ public class MainViewModel : ViewModelBase
 
         OthersAdd = ReactiveCommand.Create(() =>
         {
-            var key = OthersText.ToLowerInvariant();
+            var key = OthersText.ToLowerInvariant().Trim();
+            if (string.IsNullOrEmpty(key)) return;
             _othersContentList.Add(key);
             OthersContent = string.Join(", ", _othersContentList);
             OthersText = string.Empty;
@@ -160,7 +171,8 @@ public class MainViewModel : ViewModelBase
 
         TextContentAdd = ReactiveCommand.Create(() =>
         {
-            var key = TextContentText;
+            var key = TextContentText.Trim();
+            if (string.IsNullOrEmpty(key)) return;
             _textContentContentList.Add(key);
             TextContentContent = string.Join(", ", _textContentContentList);
             TextContentText = string.Empty;
